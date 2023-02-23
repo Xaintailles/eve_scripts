@@ -11,6 +11,8 @@ from esipy import EsiApp
 from esipy import EsiClient
 from esipy import EsiSecurity
 import json
+import webbrowser
+import pandas as pd
 
 app = EsiApp().get_latest_swagger
 
@@ -39,11 +41,15 @@ client = EsiClient(
 )
 
 # this print a URL where we can log in
-print(security.get_auth_uri(state='SomeRandomGeneratedState', 
-                            scopes=['esi-wallet.read_character_wallet.v1']))
+url = security.get_auth_uri(state='SomeRandomGeneratedState', 
+                            scopes=['esi-wallet.read_character_wallet.v1'])
+
+chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+
+webbrowser.get(chrome_path).open(url)
 
 
-tokens = security.auth('B2I29iYb5EmHSIf_g395uQ')
+tokens = security.auth('DHJ6XiJMsESrfCW5U6kVlw')
 
 print(tokens)
 
@@ -56,4 +62,6 @@ op = app.op['get_characters_character_id_wallet'](
 wallet = client.request(op)
 
 # and to see the data behind, let's print it
-print(wallet.data)
+test = wallet.data
+
+print(type(test[0][0]))
