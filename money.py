@@ -13,6 +13,10 @@ from esipy import EsiSecurity
 import json
 import webbrowser
 import pandas as pd
+import os
+
+def file_is_empty(path):
+    return os.stat(path).st_size==0
 
 app = EsiApp().get_latest_swagger
 
@@ -49,7 +53,45 @@ chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
 webbrowser.get(chrome_path).open(url)
 
 
-tokens = security.auth('DHJ6XiJMsESrfCW5U6kVlw')
+tokens = security.auth('MVZj9HbPjkCVM6ImWggQHg')
+
+
+
+
+
+#Creates a new file if non exists
+try:
+    open(r'C:\Users\Gebruiker\Desktop\secrets\stored_credentials.json','x')
+except FileExistsError:
+    print('File Already exists, proceeding ...')
+
+
+#Opens the file, and adds the new token to the list of stored tokens
+with open(r'C:\Users\Gebruiker\Desktop\secrets\stored_credentials.json') as f:
+    
+    is_empty = file_is_empty(r'C:\Users\Gebruiker\Desktop\secrets\stored_credentials.json')
+    
+    if is_empty:
+        new_entry_id = 0
+    else:
+        new_entry_id = len(json.load(f))
+    
+    if is_empty:
+        dict_file = {}
+        
+    dict_file[new_entry_id] = tokens
+
+with open(r'C:\Users\Gebruiker\Desktop\secrets\stored_credentials.json','w') as f:
+    f.write(json.dumps(dict_file))
+
+with open(r'C:\Users\Gebruiker\Desktop\secrets\stored_credentials.json') as f:
+    json_string = json.load(f)
+
+
+
+
+
+
 
 print(tokens)
 
